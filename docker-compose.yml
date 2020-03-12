@@ -1,0 +1,15 @@
+version: '3'
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_USER: test
+      MYSQL_PASSWORD: pass
+      MYSQL_DATABASE: testdb
+    ports:
+      - 3306:3306
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/db/sql:/docker-entrypoint-initdb.d
