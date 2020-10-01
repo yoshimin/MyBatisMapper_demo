@@ -1,6 +1,7 @@
 package com.example.demo
 
 import org.springframework.dao.DuplicateKeyException
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
@@ -8,7 +9,8 @@ import java.util.concurrent.Executors
 
 @RestController
 @RequestMapping("/test/user")
-class UserController(private val repository: UserRepository) {
+class UserController(private val repository: UserRepository,
+                     private val transactionalRepository: TransactionalUserRepository) {
     @PostMapping("/add")
     fun add(@RequestBody request: AddUserRequest): String {
         repository.insert(request)
@@ -23,7 +25,13 @@ class UserController(private val repository: UserRepository) {
 
     @PostMapping("/update/{id}")
     fun update(@PathVariable id: Int, @RequestBody request: UpdateUserRequest): String {
-        val id = repository.update(id, request.email)
+        val id = repository.update(id, request.name, request.email)
+        return "success! userId = $id"
+    }
+
+    @PostMapping("/select-and-update/{id}")
+    fun selectAndUpdate(@PathVariable id: Int, @RequestBody request: UpdateUserRequest): String {
+        val id = transactionalRepository.selectAndUpdate(id, request.name, request.email)
         return "success! userId = $id"
     }
 

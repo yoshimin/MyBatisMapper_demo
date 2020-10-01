@@ -1,3 +1,3 @@
 package com.example.demo
 
-data class UpdateUserRequest(val email: String)
+data class UpdateUserRequest(var name: String, val email: String)
